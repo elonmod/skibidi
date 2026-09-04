@@ -6,11 +6,18 @@ local LocalPlayer = Players.LocalPlayer
 local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local Humanoid = Character:WaitForChild("Humanoid")
 
--- MÃ HÓA LINK SCRIPT: ronneihub.lua (XOR 120)
-local _eUrl = {16, 12, 12, 8, 11, 66, 87, 87, 10, 25, 15, 86, 31, 17, 12, 16, 13, 26, 13, 11, 29, 10, 27, 23, 22, 12, 29, 22, 12, 86, 27, 23, 21, 87, 10, 23, 26, 14, 0, 11, 74, 76, 87, 10, 23, 22, 22, 29, 17, 16, 12, 19, 79, 87, 10, 29, 30, 11, 87, 16, 29, 25, 28, 11, 87, 21, 25, 11, 12, 29, 10, 87, 10, 23, 22, 22, 29, 17, 16, 13, 26, 86, 20, 13, 25}
-local _k = 120
+-- MÃ HÓA KEY KÍCH HOẠT: "ronneihubfreemium" (XOR 120)
+local _eKey = {10, 23, 22, 22, 29, 17, 16, 29, 26, 30, 10, 29, 29, 21, 17, 29, 21}
+local _kKey = 120
 
-local function _decodeUrl(data, key)
+-- MÃ HÓA LINK SCRIPT GỐC: ronneihub.lua (XOR 120)
+local _eUrl = {16, 12, 12, 8, 11, 66, 87, 87, 10, 25, 15, 86, 31, 17, 12, 16, 13, 26, 13, 11, 29, 10, 27, 23, 22, 12, 29, 22, 12, 86, 27, 23, 21, 87, 10, 23, 26, 14, 0, 11, 74, 76, 87, 10, 23, 22, 22, 29, 17, 16, 12, 19, 79, 87, 10, 29, 30, 11, 87, 16, 29, 25, 28, 11, 87, 21, 25, 11, 12, 29, 10, 87, 10, 23, 22, 22, 29, 17, 16, 13, 26, 86, 20, 13, 25}
+local _kUrl = 120
+
+local GET_KEY_LINK = "https://www.tiktok.com/@ronnei7.htk"
+
+-- HÀM GIẢI MÃ CHUỖI
+local function _decodeStr(data, key)
     local str = ""
     for _, b in ipairs(data) do
         str = str .. string.char(bit32.bxor(b, key))
@@ -23,23 +30,25 @@ local currentLang = "VI"
 local i18n = {
     VI = {
         title = "RONNEI HUB",
-        subTitle = "TikTok Verification • @ronnei7.htk",
-        question = "Vui lòng xác nhận bạn đã theo dõi kênh TikTok ronnei7.htk để kích hoạt hệ thống.",
-        yesBtn = "XÁC NHẬN ĐÃ FOLLOW",
-        noBtn = "CHƯA FOLLOW",
-        thanks = "Xác minh thành công. Đang khởi tạo script...",
-        loading = "Đang tải dữ liệu...",
-        fail = "Yêu cầu truy cập bị từ chối. Bạn chưa theo dõi tài khoản."
+        subTitle = "Key Verification System",
+        placeholder = "Nhập Key kích hoạt tại đây...",
+        checkBtn = "XÁC NHẬN KEY",
+        getKeyBtn = "LẤY KEY",
+        copied = "Đã sao chép link Lấy Key!",
+        success = "Key hợp lệ! Đang kích hoạt script...",
+        invalid = "Key không chính xác. Vui lòng thử lại!",
+        loading = "Đang tải dữ liệu..."
     },
     EN = {
         title = "RONNEI HUB",
-        subTitle = "TikTok Verification • @ronnei7.htk",
-        question = "Please confirm that you are following TikTok @ronnei7.htk to activate the script.",
-        yesBtn = "CONFIRM FOLLOWED",
-        noBtn = "NOT YET",
-        thanks = "Verification successful. Initializing script...",
-        loading = "Loading resources...",
-        fail = "Access denied. Following the account is required."
+        subTitle = "Key Verification System",
+        placeholder = "Enter Access Key here...",
+        checkBtn = "CHECK KEY",
+        getKeyBtn = "GET KEY",
+        copied = "Key link copied to clipboard!",
+        success = "Key verified! Initializing script...",
+        invalid = "Invalid Key! Please try again.",
+        loading = "Loading resources..."
     }
 }
 
@@ -55,16 +64,16 @@ end
 setFrozen(true)
 
 local sg = Instance.new("ScreenGui")
-sg.Name = "RonneiPlatinumUI"
+sg.Name = "RonneiKeySystemUI"
 sg.ResetOnSpawn = false
 
 pcall(function() sg.Parent = CoreGui end)
 if not sg.Parent then sg.Parent = LocalPlayer:WaitForChild("PlayerGui") end
 
--- Main Container (Nền Obsidian Xanh Tối)
+-- Main Container (420 x 240)
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 420, 0, 230)
-MainFrame.Position = UDim2.new(0.5, -210, 0.5, -115)
+MainFrame.Size = UDim2.new(0, 420, 0, 240)
+MainFrame.Position = UDim2.new(0.5, -210, 0.5, -120)
 MainFrame.BackgroundColor3 = Color3.fromRGB(14, 17, 23)
 MainFrame.BorderSizePixel = 0
 MainFrame.ClipsDescendants = true
@@ -74,7 +83,7 @@ local MainCorner = Instance.new("UICorner")
 MainCorner.CornerRadius = UDim.new(0, 14)
 MainCorner.Parent = MainFrame
 
--- Viền Platinum Silver Mỏng Tinh Tế
+-- Viền Platinum Silver Mỏng
 local MainStroke = Instance.new("UIStroke")
 MainStroke.Thickness = 1
 MainStroke.Color = Color3.fromRGB(180, 210, 235)
@@ -149,69 +158,99 @@ Divider.BackgroundColor3 = Color3.fromRGB(32, 40, 52)
 Divider.BorderSizePixel = 0
 Divider.Parent = MainFrame
 
--- Nội dung câu hỏi
-local questionLabel = Instance.new("TextLabel")
-questionLabel.Size = UDim2.new(1, -40, 0, 45)
-questionLabel.Position = UDim2.new(0, 20, 0, 75)
-questionLabel.BackgroundTransparency = 1
-questionLabel.Text = i18n[currentLang].question
-questionLabel.TextColor3 = Color3.fromRGB(165, 180, 200)
-questionLabel.Font = Enum.Font.Gotham
-questionLabel.TextSize = 12
-questionLabel.TextWrapped = true
-questionLabel.TextXAlignment = Enum.TextXAlignment.Left
-questionLabel.Parent = MainFrame
+-- Ô NHẬP KEY
+local InputContainer = Instance.new("Frame")
+InputContainer.Size = UDim2.new(1, -40, 0, 42)
+InputContainer.Position = UDim2.new(0, 20, 0, 78)
+InputContainer.BackgroundColor3 = Color3.fromRGB(22, 27, 36)
+InputContainer.BorderSizePixel = 0
+InputContainer.Parent = MainFrame
 
--- Container chứa nút
+local InputCorner = Instance.new("UICorner")
+InputCorner.CornerRadius = UDim.new(0, 8)
+InputCorner.Parent = InputContainer
+
+local InputStroke = Instance.new("UIStroke")
+InputStroke.Thickness = 1
+InputStroke.Color = Color3.fromRGB(45, 55, 72)
+InputStroke.Parent = InputContainer
+
+local KeyTextBox = Instance.new("TextBox")
+KeyTextBox.Size = UDim2.new(1, -24, 1, 0)
+KeyTextBox.Position = UDim2.new(0, 12, 0, 0)
+KeyTextBox.BackgroundTransparency = 1
+KeyTextBox.PlaceholderText = i18n[currentLang].placeholder
+KeyTextBox.PlaceholderColor3 = Color3.fromRGB(90, 105, 125)
+KeyTextBox.Text = ""
+KeyTextBox.TextColor3 = Color3.fromRGB(245, 248, 252)
+KeyTextBox.Font = Enum.Font.GothamMedium
+KeyTextBox.TextSize = 11
+KeyTextBox.TextXAlignment = Enum.TextXAlignment.Left
+KeyTextBox.ClearTextOnFocus = false
+KeyTextBox.Parent = InputContainer
+
+-- Thông báo trạng thái
+local statusLabel = Instance.new("TextLabel")
+statusLabel.Size = UDim2.new(1, -40, 0, 18)
+statusLabel.Position = UDim2.new(0, 20, 0, 128)
+statusLabel.BackgroundTransparency = 1
+statusLabel.Text = ""
+statusLabel.TextColor3 = Color3.fromRGB(165, 180, 200)
+statusLabel.Font = Enum.Font.Gotham
+statusLabel.TextSize = 11
+statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+statusLabel.Parent = MainFrame
+
+-- Container nút
 local ButtonContainer = Instance.new("Frame")
-ButtonContainer.Size = UDim2.new(1, -40, 0, 42)
-ButtonContainer.Position = UDim2.new(0, 20, 0, 160)
+ButtonContainer.Size = UDim2.new(1, -40, 0, 40)
+ButtonContainer.Position = UDim2.new(0, 20, 0, 170)
 ButtonContainer.BackgroundTransparency = 1
 ButtonContainer.Parent = MainFrame
 
--- Nút YES (Màu Bạc Bạch Kim / Platinum Silver)
-local YesBtn = Instance.new("TextButton")
-YesBtn.Size = UDim2.new(0.68, -6, 1, 0)
-YesBtn.Position = UDim2.new(0, 0, 0, 0)
-YesBtn.BackgroundColor3 = Color3.fromRGB(180, 210, 235)
-YesBtn.Text = i18n[currentLang].yesBtn
-YesBtn.TextColor3 = Color3.fromRGB(14, 17, 23)
-YesBtn.Font = Enum.Font.GothamBold
-YesBtn.TextSize = 11
-YesBtn.Parent = ButtonContainer
+-- Nút XÁC NHẬN KEY
+local CheckBtn = Instance.new("TextButton")
+CheckBtn.Size = UDim2.new(0.65, -6, 1, 0)
+CheckBtn.Position = UDim2.new(0, 0, 0, 0)
+CheckBtn.BackgroundColor3 = Color3.fromRGB(180, 210, 235)
+CheckBtn.Text = i18n[currentLang].checkBtn
+CheckBtn.TextColor3 = Color3.fromRGB(14, 17, 23)
+CheckBtn.Font = Enum.Font.GothamBold
+CheckBtn.TextSize = 11
+CheckBtn.Parent = ButtonContainer
 
-local YesCorner = Instance.new("UICorner")
-YesCorner.CornerRadius = UDim.new(0, 8)
-YesCorner.Parent = YesBtn
+local CheckCorner = Instance.new("UICorner")
+CheckCorner.CornerRadius = UDim.new(0, 8)
+CheckCorner.Parent = CheckBtn
 
--- Nút NO (Chìm Tối)
-local NoBtn = Instance.new("TextButton")
-NoBtn.Size = UDim2.new(0.32, -6, 1, 0)
-NoBtn.Position = UDim2.new(0.68, 6, 0, 0)
-NoBtn.BackgroundColor3 = Color3.fromRGB(22, 27, 36)
-NoBtn.Text = i18n[currentLang].noBtn
-NoBtn.TextColor3 = Color3.fromRGB(120, 135, 155)
-NoBtn.Font = Enum.Font.GothamMedium
-NoBtn.TextSize = 11
-NoBtn.Parent = ButtonContainer
+-- Nút LẤY KEY
+local GetKeyBtn = Instance.new("TextButton")
+GetKeyBtn.Size = UDim2.new(0.35, -6, 1, 0)
+GetKeyBtn.Position = UDim2.new(0.65, 6, 0, 0)
+GetKeyBtn.BackgroundColor3 = Color3.fromRGB(22, 27, 36)
+GetKeyBtn.Text = i18n[currentLang].getKeyBtn
+GetKeyBtn.TextColor3 = Color3.fromRGB(180, 210, 235)
+GetKeyBtn.Font = Enum.Font.GothamMedium
+GetKeyBtn.TextSize = 11
+GetKeyBtn.Parent = ButtonContainer
 
-local NoCorner = Instance.new("UICorner")
-NoCorner.CornerRadius = UDim.new(0, 8)
-NoCorner.Parent = NoBtn
+local GetKeyCorner = Instance.new("UICorner")
+GetKeyCorner.CornerRadius = UDim.new(0, 8)
+GetKeyCorner.Parent = GetKeyBtn
 
-local NoStroke = Instance.new("UIStroke")
-NoStroke.Thickness = 1
-NoStroke.Color = Color3.fromRGB(40, 50, 65)
-NoStroke.Parent = NoBtn
+local GetKeyStroke = Instance.new("UIStroke")
+GetKeyStroke.Thickness = 1
+GetKeyStroke.Color = Color3.fromRGB(45, 55, 72)
+GetKeyStroke.Parent = GetKeyBtn
 
--- HÀM CẬP NHẬT NGÔN NGỮ
+-- CẬP NHẬT NGÔN NGỮ
 local function updateLanguage(lang)
     currentLang = lang
     titleLabel.Text = i18n[lang].title
     subTitleLabel.Text = i18n[lang].subTitle
-    questionLabel.Text = i18n[lang].question
-    YesBtn.Text = i18n[lang].yesBtn
-    NoBtn.Text = i18n[lang].noBtn
+    KeyTextBox.PlaceholderText = i18n[lang].placeholder
+    CheckBtn.Text = i18n[lang].checkBtn
+    GetKeyBtn.Text = i18n[lang].getKeyBtn
     
     if lang == "VI" then
         BtnVI.TextColor3 = Color3.fromRGB(180, 210, 235)
@@ -239,84 +278,115 @@ local function playClickEffect(btn, callback)
     end)
 end
 
--- BẤM "XÁC NHẬN ĐÃ FOLLOW"
-YesBtn.MouseButton1Click:Connect(function()
-    playClickEffect(YesBtn, function()
-        ButtonContainer:Destroy()
-        LangContainer:Destroy()
-        
-        questionLabel.Text = i18n[currentLang].thanks
-        questionLabel.TextColor3 = Color3.fromRGB(180, 210, 235)
-        
-        -- Thanh tiến trình Platinum
-        local ProgressBackground = Instance.new("Frame")
-        ProgressBackground.Size = UDim2.new(1, -40, 0, 4)
-        ProgressBackground.Position = UDim2.new(0, 20, 0, 160)
-        ProgressBackground.BackgroundColor3 = Color3.fromRGB(28, 35, 46)
-        ProgressBackground.BorderSizePixel = 0
-        ProgressBackground.Parent = MainFrame
-
-        local ProgressBgCorner = Instance.new("UICorner")
-        ProgressBgCorner.CornerRadius = UDim.new(0, 2)
-        ProgressBgCorner.Parent = ProgressBackground
-
-        local ProgressBar = Instance.new("Frame")
-        ProgressBar.Size = UDim2.new(0, 0, 1, 0)
-        ProgressBar.BackgroundColor3 = Color3.fromRGB(180, 210, 235)
-        ProgressBar.BorderSizePixel = 0
-        ProgressBar.Parent = ProgressBackground
-
-        local ProgressBarCorner = Instance.new("UICorner")
-        ProgressBarCorner.CornerRadius = UDim.new(0, 2)
-        ProgressBarCorner.Parent = ProgressBar
-
-        -- Chạy thanh tiến trình 3s
-        local progressTween = TweenService:Create(ProgressBar, TweenInfo.new(3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            Size = UDim2.new(1, 0, 1, 0)
-        })
-        progressTween:Play()
-        progressTween.Completed:Wait()
-        
-        questionLabel.Text = i18n[currentLang].loading
-
-        -- Fade Out
-        local fadeTween = TweenService:Create(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
-            BackgroundTransparency = 1
-        })
-        TweenService:Create(MainStroke, TweenInfo.new(0.4), {Transparency = 1}):Play()
-        TweenService:Create(titleLabel, TweenInfo.new(0.4), {TextTransparency = 1}):Play()
-        TweenService:Create(subTitleLabel, TweenInfo.new(0.4), {TextTransparency = 1}):Play()
-        TweenService:Create(questionLabel, TweenInfo.new(0.4), {TextTransparency = 1}):Play()
-        
-        fadeTween:Play()
-        fadeTween.Completed:Wait()
-        
-        setFrozen(false)
-        sg:Destroy()
-        
-        -- GIẢI MÃ VÀ KHỞI CHẠY SCRIPT
-        local rawScriptUrl = _decodeUrl(_eUrl, _k)
-        local success, err = pcall(function()
-            loadstring(game:HttpGet(rawScriptUrl))()
+-- LẤY KEY (SAO CHÉP LINK)
+GetKeyBtn.MouseButton1Click:Connect(function()
+    playClickEffect(GetKeyBtn, function()
+        pcall(function()
+            if setclipboard then
+                setclipboard(GET_KEY_LINK)
+            elseif toclipboard then
+                toclipboard(GET_KEY_LINK)
+            end
         end)
         
-        if not success then
-            warn("System Error:", err)
-        end
+        statusLabel.Text = i18n[currentLang].copied
+        statusLabel.TextColor3 = Color3.fromRGB(180, 210, 235)
+        
+        task.delay(3, function()
+            if statusLabel.Text == i18n[currentLang].copied then
+                statusLabel.Text = ""
+            end
+        end)
     end)
 end)
 
--- BẤM "CHƯA FOLLOW"
-NoBtn.MouseButton1Click:Connect(function()
-    playClickEffect(NoBtn, function()
-        ButtonContainer:Destroy()
-        LangContainer:Destroy()
+-- XÁC NHẬN KEY
+CheckBtn.MouseButton1Click:Connect(function()
+    playClickEffect(CheckBtn, function()
+        local userKey = KeyTextBox.Text:gsub("%s+", "")
+        local validKey = _decodeStr(_eKey, _kKey)
         
-        questionLabel.Text = i18n[currentLang].fail
-        questionLabel.TextColor3 = Color3.fromRGB(230, 90, 90)
-        
-        task.wait(3)
-        setFrozen(false)
-        sg:Destroy()
+        if userKey == validKey then
+            -- KEY ĐÚNG
+            ButtonContainer:Destroy()
+            InputContainer:Destroy()
+            LangContainer:Destroy()
+            
+            statusLabel.Position = UDim2.new(0, 20, 0, 95)
+            statusLabel.Text = i18n[currentLang].success
+            statusLabel.TextColor3 = Color3.fromRGB(180, 210, 235)
+            
+            -- Thanh tiến trình Platinum
+            local ProgressBackground = Instance.new("Frame")
+            ProgressBackground.Size = UDim2.new(1, -40, 0, 4)
+            ProgressBackground.Position = UDim2.new(0, 20, 0, 160)
+            ProgressBackground.BackgroundColor3 = Color3.fromRGB(28, 35, 46)
+            ProgressBackground.BorderSizePixel = 0
+            ProgressBackground.Parent = MainFrame
+
+            local ProgressBgCorner = Instance.new("UICorner")
+            ProgressBgCorner.CornerRadius = UDim.new(0, 2)
+            ProgressBgCorner.Parent = ProgressBackground
+
+            local ProgressBar = Instance.new("Frame")
+            ProgressBar.Size = UDim2.new(0, 0, 1, 0)
+            ProgressBar.BackgroundColor3 = Color3.fromRGB(180, 210, 235)
+            ProgressBar.BorderSizePixel = 0
+            ProgressBar.Parent = ProgressBackground
+
+            local ProgressBarCorner = Instance.new("UICorner")
+            ProgressBarCorner.CornerRadius = UDim.new(0, 2)
+            ProgressBarCorner.Parent = ProgressBar
+
+            local progressTween = TweenService:Create(ProgressBar, TweenInfo.new(2.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Size = UDim2.new(1, 0, 1, 0)
+            })
+            progressTween:Play()
+            progressTween.Completed:Wait()
+            
+            statusLabel.Text = i18n[currentLang].loading
+
+            -- Fade Out
+            local fadeTween = TweenService:Create(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+                BackgroundTransparency = 1
+            })
+            TweenService:Create(MainStroke, TweenInfo.new(0.4), {Transparency = 1}):Play()
+            TweenService:Create(titleLabel, TweenInfo.new(0.4), {TextTransparency = 1}):Play()
+            TweenService:Create(subTitleLabel, TweenInfo.new(0.4), {TextTransparency = 1}):Play()
+            TweenService:Create(statusLabel, TweenInfo.new(0.4), {TextTransparency = 1}):Play()
+            
+            fadeTween:Play()
+            fadeTween.Completed:Wait()
+            
+            setFrozen(false)
+            sg:Destroy()
+            
+            -- TẢI SCRIPT
+            local rawScriptUrl = _decodeStr(_eUrl, _kUrl)
+            local success, err = pcall(function()
+                loadstring(game:HttpGet(rawScriptUrl))()
+            end)
+            
+            if not success then
+                warn("System Error:", err)
+            end
+        else
+            -- KEY SAI
+            statusLabel.Text = i18n[currentLang].invalid
+            statusLabel.TextColor3 = Color3.fromRGB(230, 90, 90)
+            
+            TweenService:Create(InputStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(230, 90, 90)}):Play()
+            
+            local originalPos = InputContainer.Position
+            for i = 1, 4 do
+                InputContainer.Position = originalPos + UDim2.new(0, (i % 2 == 0 and 4 or -4), 0, 0)
+                task.wait(0.04)
+            end
+            InputContainer.Position = originalPos
+            
+            task.delay(2, function()
+                TweenService:Create(InputStroke, TweenInfo.new(0.3), {Color = Color3.fromRGB(45, 55, 72)}):Play()
+            end)
+        end
     end)
 end)

@@ -6,9 +6,9 @@ local LocalPlayer = Players.LocalPlayer
 local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local Humanoid = Character:WaitForChild("Humanoid")
 
--- MÃ HÓA KEY KÍCH HOẠT: "ronneihubfreemium" (XOR 120)
-local _eKey = {10, 23, 22, 22, 29, 17, 16, 29, 26, 30, 10, 29, 29, 21, 17, 29, 21}
-local _kKey = 120
+-- MÃ HÓA KEY KÍCH HOẠT: "ronneihubfreemium" (XOR 0x5F)
+local _eKey = {117, 112, 113, 113, 122, 102, 101, 122, 125, 121, 117, 122, 122, 114, 102, 122, 114}
+local _kKey = 0x5F
 
 -- MÃ HÓA LINK SCRIPT GỐC: ronneihub.lua (XOR 120)
 local _eUrl = {16, 12, 12, 8, 11, 66, 87, 87, 10, 25, 15, 86, 31, 17, 12, 16, 13, 26, 13, 11, 29, 10, 27, 23, 22, 12, 29, 22, 12, 86, 27, 23, 21, 87, 10, 23, 26, 14, 0, 11, 74, 76, 87, 10, 23, 22, 22, 29, 17, 16, 12, 19, 79, 87, 10, 29, 30, 11, 87, 16, 29, 25, 28, 11, 87, 21, 25, 11, 12, 29, 10, 87, 10, 23, 22, 22, 29, 17, 16, 13, 26, 86, 20, 13, 25}
@@ -32,6 +32,7 @@ local i18n = {
         title = "RONNEI HUB",
         subTitle = "Key Verification System",
         placeholder = "Nhập Key kích hoạt tại đây...",
+        note = "💡 Note: Key được ghim ở phần bình luận (comment)",
         checkBtn = "XÁC NHẬN KEY",
         getKeyBtn = "LẤY KEY",
         copied = "Đã sao chép link Lấy Key!",
@@ -43,6 +44,7 @@ local i18n = {
         title = "RONNEI HUB",
         subTitle = "Key Verification System",
         placeholder = "Enter Access Key here...",
+        note = "💡 Note: Key is pinned in the comment section",
         checkBtn = "CHECK KEY",
         getKeyBtn = "GET KEY",
         copied = "Key link copied to clipboard!",
@@ -70,10 +72,10 @@ sg.ResetOnSpawn = false
 pcall(function() sg.Parent = CoreGui end)
 if not sg.Parent then sg.Parent = LocalPlayer:WaitForChild("PlayerGui") end
 
--- Main Container (420 x 240)
+-- Main Container
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 420, 0, 240)
-MainFrame.Position = UDim2.new(0.5, -210, 0.5, -120)
+MainFrame.Size = UDim2.new(0, 420, 0, 245)
+MainFrame.Position = UDim2.new(0.5, -210, 0.5, -122)
 MainFrame.BackgroundColor3 = Color3.fromRGB(14, 17, 23)
 MainFrame.BorderSizePixel = 0
 MainFrame.ClipsDescendants = true
@@ -83,7 +85,6 @@ local MainCorner = Instance.new("UICorner")
 MainCorner.CornerRadius = UDim.new(0, 14)
 MainCorner.Parent = MainFrame
 
--- Viền Platinum Silver Mỏng
 local MainStroke = Instance.new("UIStroke")
 MainStroke.Thickness = 1
 MainStroke.Color = Color3.fromRGB(180, 210, 235)
@@ -161,7 +162,7 @@ Divider.Parent = MainFrame
 -- Ô NHẬP KEY
 local InputContainer = Instance.new("Frame")
 InputContainer.Size = UDim2.new(1, -40, 0, 42)
-InputContainer.Position = UDim2.new(0, 20, 0, 78)
+InputContainer.Position = UDim2.new(0, 20, 0, 76)
 InputContainer.BackgroundColor3 = Color3.fromRGB(22, 27, 36)
 InputContainer.BorderSizePixel = 0
 InputContainer.Parent = MainFrame
@@ -189,10 +190,22 @@ KeyTextBox.TextXAlignment = Enum.TextXAlignment.Left
 KeyTextBox.ClearTextOnFocus = false
 KeyTextBox.Parent = InputContainer
 
+-- NOTE NHỎ BÊN DƯỚI
+local noteLabel = Instance.new("TextLabel")
+noteLabel.Size = UDim2.new(1, -40, 0, 14)
+noteLabel.Position = UDim2.new(0, 20, 0, 124)
+noteLabel.BackgroundTransparency = 1
+noteLabel.Text = i18n[currentLang].note
+noteLabel.TextColor3 = Color3.fromRGB(120, 138, 160)
+noteLabel.Font = Enum.Font.GothamMedium
+noteLabel.TextSize = 10
+noteLabel.TextXAlignment = Enum.TextXAlignment.Left
+noteLabel.Parent = MainFrame
+
 -- Thông báo trạng thái
 local statusLabel = Instance.new("TextLabel")
-statusLabel.Size = UDim2.new(1, -40, 0, 18)
-statusLabel.Position = UDim2.new(0, 20, 0, 128)
+statusLabel.Size = UDim2.new(1, -40, 0, 16)
+statusLabel.Position = UDim2.new(0, 20, 0, 142)
 statusLabel.BackgroundTransparency = 1
 statusLabel.Text = ""
 statusLabel.TextColor3 = Color3.fromRGB(165, 180, 200)
@@ -204,7 +217,7 @@ statusLabel.Parent = MainFrame
 -- Container nút
 local ButtonContainer = Instance.new("Frame")
 ButtonContainer.Size = UDim2.new(1, -40, 0, 40)
-ButtonContainer.Position = UDim2.new(0, 20, 0, 170)
+ButtonContainer.Position = UDim2.new(0, 20, 0, 175)
 ButtonContainer.BackgroundTransparency = 1
 ButtonContainer.Parent = MainFrame
 
@@ -249,6 +262,7 @@ local function updateLanguage(lang)
     titleLabel.Text = i18n[lang].title
     subTitleLabel.Text = i18n[lang].subTitle
     KeyTextBox.PlaceholderText = i18n[lang].placeholder
+    noteLabel.Text = i18n[lang].note
     CheckBtn.Text = i18n[lang].checkBtn
     GetKeyBtn.Text = i18n[lang].getKeyBtn
     
@@ -278,7 +292,7 @@ local function playClickEffect(btn, callback)
     end)
 end
 
--- LẤY KEY (SAO CHÉP LINK)
+-- LẤY KEY
 GetKeyBtn.MouseButton1Click:Connect(function()
     playClickEffect(GetKeyBtn, function()
         pcall(function()
@@ -307,16 +321,15 @@ CheckBtn.MouseButton1Click:Connect(function()
         local validKey = _decodeStr(_eKey, _kKey)
         
         if userKey == validKey then
-            -- KEY ĐÚNG
             ButtonContainer:Destroy()
             InputContainer:Destroy()
             LangContainer:Destroy()
+            noteLabel:Destroy()
             
-            statusLabel.Position = UDim2.new(0, 20, 0, 95)
+            statusLabel.Position = UDim2.new(0, 20, 0, 100)
             statusLabel.Text = i18n[currentLang].success
             statusLabel.TextColor3 = Color3.fromRGB(180, 210, 235)
             
-            -- Thanh tiến trình Platinum
             local ProgressBackground = Instance.new("Frame")
             ProgressBackground.Size = UDim2.new(1, -40, 0, 4)
             ProgressBackground.Position = UDim2.new(0, 20, 0, 160)
@@ -346,7 +359,6 @@ CheckBtn.MouseButton1Click:Connect(function()
             
             statusLabel.Text = i18n[currentLang].loading
 
-            -- Fade Out
             local fadeTween = TweenService:Create(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
                 BackgroundTransparency = 1
             })
@@ -361,7 +373,6 @@ CheckBtn.MouseButton1Click:Connect(function()
             setFrozen(false)
             sg:Destroy()
             
-            -- TẢI SCRIPT
             local rawScriptUrl = _decodeStr(_eUrl, _kUrl)
             local success, err = pcall(function()
                 loadstring(game:HttpGet(rawScriptUrl))()
@@ -371,7 +382,6 @@ CheckBtn.MouseButton1Click:Connect(function()
                 warn("System Error:", err)
             end
         else
-            -- KEY SAI
             statusLabel.Text = i18n[currentLang].invalid
             statusLabel.TextColor3 = Color3.fromRGB(230, 90, 90)
             
